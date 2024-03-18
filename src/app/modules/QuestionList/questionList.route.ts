@@ -3,7 +3,7 @@ import { QuestionListController } from "./questionList.controller";
 
 const router = express.Router();
 
-// router.get('/', QuestionListController.getAllQuestionLists);
+router.get('/', QuestionListController.getAllQuestionLists);
 router.get("/:id", QuestionListController.getQuestionListById);
 router.post("/", QuestionListController.createQuestionList);
 router.put('/:id', QuestionListController.updateQuestionList);

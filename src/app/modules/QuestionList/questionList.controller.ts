@@ -1,79 +1,29 @@
 import { Request, Response } from "express";
-
 import ApiError from "../../../errors/ApiError";
-import prisma from "../../../shared/prisma";
 import httpStatus from "http-status";
-import { Question_List } from "@prisma/client";
 import catchAsync from "../../../shared/catchAsync";
 import { QuestionListService } from "./questionList.service";
 import sendResponse from "../../../shared/sendResponse";
+import pick from "../../../shared/pick";
+import { paginationFields } from "../../../constants/pagination";
 
-// class QuestionListController {
-//   async getAllQuestionLists(req: Request, res: Response) {
-//     const page = req.query.page ? parseInt(req.query.page.toString()) : 1;
-//     const limit = req.query.limit ? parseInt(req.query.limit.toString()) : 10;
-//     const searchQuery = req.query.search ? req.query.search.toString() : undefined;
+export const questionListFilterableFields = ["searchTerm", "title", "syncId"];
 
-//     try {
-//       const questionLists = await questionListService.getAllQuestionLists(page, limit, searchQuery);
-//       res.json(questionLists);
-//     } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' });
-//     }
-//   }
-
-//   async getQuestionListById(req: Request, res: Response) {
-//     const { id } = req.params;
-//     try {
-//       const questionList = await questionListService.getQuestionListById(id);
-//       if (!questionList) {
-//         return res.status(404).json({ error: 'Question list not found' });
-//       }
-//       res.json(questionList);
-//     } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' });
-//     }
-//   }
-
-//   async createQuestionList(req: Request, res: Response) {
-//     const data = req.body;
-//     try {
-//       const newQuestionList = await questionListService.createQuestionList(data);
-//       res.status(201).json(newQuestionList);
-//     } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' });
-//     }
-//   }
-
-//   async updateQuestionList(req: Request, res: Response) {
-//     const { id } = req.params;
-//     const data = req.body;
-//     try {
-//       const updatedQuestionList = await questionListService.updateQuestionList(id, data);
-//       if (!updatedQuestionList) {
-//         return res.status(404).json({ error: 'Question list not found' });
-//       }
-//       res.json(updatedQuestionList);
-//     } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' });
-//     }
-//   }
-
-//   async deleteQuestionList(req: Request, res: Response) {
-//     const { id } = req.params;
-//     try {
-//       const deletedQuestionList = await questionListService.deleteQuestionList(id);
-//       if (!deletedQuestionList) {
-//         return res.status(404).json({ error: 'Question list not found' });
-//       }
-//       res.json(deletedQuestionList);
-//     } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' });
-//     }
-//   }
-// }
-
-// export default QuestionListController;
+const getAllQuestionLists = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, questionListFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await QuestionListService.getAllQuestionLists(
+    filters,
+    paginationOptions
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Question fetched successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
 
 const getQuestionListById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -104,7 +54,7 @@ const createQuestionList = catchAsync(async (req: Request, res: Response) => {
 const updateQuestionList = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const data = req.body;
-  
+
   const result = await QuestionListService.updateQuestionList(id, data);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -130,4 +80,5 @@ export const QuestionListController = {
   getQuestionListById,
   deleteQuestionList,
   updateQuestionList,
+  getAllQuestionLists,
 };

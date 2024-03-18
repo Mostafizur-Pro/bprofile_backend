@@ -1,63 +1,62 @@
-import { PrismaClient, Status, Question_List } from "@prisma/client";
-import sendResponse from "../../../shared/sendResponse";
-import httpStatus from "http-status";
-import catchAsync from "../../../shared/catchAsync";
-import ApiError from "../../../errors/ApiError";
-import { Request, Response } from "express";
-import { QuestionListController } from "./questionList.controller";
+import { PrismaClient, Status, Question_List, Prisma } from "@prisma/client";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import { IGenericResponse } from "../../../interfaces/common";
+import { paginationHelpers } from "../../../helpers/paginationHelper";
 
 const prisma = new PrismaClient();
 
-// class QuestionListService {
-//   async getAllQuestionLists(page: number, limit: number, searchQuery?: string): Promise<Question_List[]> {
-//     const skip = (page - 1) * limit;
-//     if (searchQuery) {
-//       return prisma.question_List.findMany({
-//         where: {
-//           OR: [
-//             { name: { contains: searchQuery } },
-//             { company: { contains: searchQuery } },
-//             { message: { contains: searchQuery } },
-//             { client_id: { contains: searchQuery } },
-//             { email: { contains: searchQuery } },
-//           ],
-//         },
-//         skip,
-//         take: limit,
-//       });
-//     } else {
-//       return prisma.question_List.findMany({
-//         skip,
-//         take: limit,
-//       });
-//     }
-//   }
+export type IQuestionListFilters = {
+  searchTerm?: string;
+};
+// export const questionListSearchableFields = ["searchTerm"];
 
-//   async getQuestionListById(id: string): Promise<Question_List | null> {
-//     return prisma.question_List.findUnique({
-//       where: { id },
-//     });
-//   }
+const getAllQuestionLists = async (
+  filters: IQuestionListFilters,
+  paginationOptions: IPaginationOptions
+): Promise<IGenericResponse<Question_List[]>> => {
+  const { searchTerm } = filters;
 
-//   async createQuestionList(data: Question_List): Promise<Question_List> {
-//     return prisma.question_List.create({ data });
-//   }
+  const { page, limit } =
+    paginationHelpers.calculatePagination(paginationOptions);
 
-//   async updateQuestionList(id: string, data: Question_List): Promise<Question_List | null> {
-//     return prisma.question_List.update({
-//       where: { id },
-//       data,
-//     });
-//   }
+  // Construct Prisma query
+  const query: Prisma.Question_ListFindManyArgs = {
+    where: {
+      AND: [
+        searchTerm
+          ? {
+              OR: [
+                { name: { contains: searchTerm, mode: "insensitive" } },
+                { number: { contains: searchTerm, mode: "insensitive" } },
+                { company: { contains: searchTerm, mode: "insensitive" } },
+                { client_id: { contains: searchTerm, mode: "insensitive" } },
+                { email: { contains: searchTerm, mode: "insensitive" } },
+              ],
+            }
+          : {},
+        // Add other filter conditions from filtersData if needed
+      ],
+    },
+    orderBy: { createdAt: "desc" }, // Default sorting by createdAt field
+    skip: (page - 1) * limit,
+    take: limit,
+  };
 
-//   async deleteQuestionList(id: string): Promise<Question_List | null> {
-//     return prisma.question_List.delete({
-//       where: { id },
-//     });
-//   }
-// }
+  // Perform the actual querying based on conditions
+  const questionLists = await prisma.question_List.findMany(query);
 
-// export default QuestionListService;
+  // Count total records for pagination
+  const total = await prisma.question_List.count({ where: query.where });
+
+  return {
+    data: questionLists,
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
+};
 
 const getQuestionListById = async (
   id: string
@@ -100,4 +99,5 @@ export const QuestionListService = {
   getQuestionListById,
   deleteQuestionList,
   updateQuestionList,
+  getAllQuestionLists,
 };
