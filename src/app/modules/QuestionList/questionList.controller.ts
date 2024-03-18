@@ -75,15 +75,6 @@ import sendResponse from "../../../shared/sendResponse";
 
 // export default QuestionListController;
 
-// const createQuestionList = async (
-//   payload: Question_List
-// ): Promise<Question_List> => {
-//   const question = await prisma.question_List.create({
-//     payload,
-//   });
-//   return question;
-// };
-
 const getQuestionListById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await QuestionListService.getQuestionListById(id);
@@ -110,6 +101,19 @@ const createQuestionList = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateQuestionList = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const data = req.body;
+  
+  const result = await QuestionListService.updateQuestionList(id, data);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Question List Update Successfully",
+    data: result,
+  });
+});
+
 const deleteQuestionList = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await QuestionListService.deleteQuestionList(id);
@@ -125,4 +129,5 @@ export const QuestionListController = {
   createQuestionList,
   getQuestionListById,
   deleteQuestionList,
+  updateQuestionList,
 };

@@ -77,6 +77,17 @@ const createQuestionList = async (
   return question;
 };
 
+const updateQuestionList = async (
+  id: string,
+  data: Partial<Question_List>
+): Promise<Question_List | null> => {
+  const result = await prisma.question_List.update({
+    where: { id },
+    data,
+  });
+  return result;
+};
+
 const deleteQuestionList = async (
   id: string
 ): Promise<Question_List | null> => {
@@ -88,4 +99,5 @@ export const QuestionListService = {
   createQuestionList,
   getQuestionListById,
   deleteQuestionList,
+  updateQuestionList,
 };
