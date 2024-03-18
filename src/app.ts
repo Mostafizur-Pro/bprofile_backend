@@ -1,8 +1,7 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { userRoutes } from "./app/modules/User/user.routes";
-import { questionRoutes } from "./app/modules/QuestionList/questionList.route";
-import { messageRoutes } from "./app/modules/message/message.route";
+import routes from "./app/routes";
+import httpStatus from "http-status";
 
 const app: Application = express();
 app.use(cors());
@@ -17,8 +16,20 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/question", questionRoutes);
-app.use("/api/v1/message", messageRoutes);
+app.use("/api/v1", routes);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.NOT_FOUND).json({
+    success: false,
+    message: "Not Found",
+    errorMessages: [
+      {
+        path: req.originalUrl,
+        message: "API Not Found",
+      },
+    ],
+  });
+  next();
+});
 
 export default app;
