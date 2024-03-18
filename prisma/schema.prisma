@@ -32,8 +32,8 @@ model Admin {
 model Question_List {
   id        String   @id @default(uuid())
   name      String
-  company   String
-  number    String
+  company   String?
+  number    String?
   message   String
   client_id String
   email     String?
@@ -46,11 +46,11 @@ model Question_List {
 
 model Message_List {
   id              String   @id @default(uuid())
-  subject         String
-  message         String
-  image           String
-  message_show    String
-  message_show_id String
+  subject         String?
+  message         String?
+  image           String?
+  message_show    String?
+  message_show_id String?
   status          Status   @default(ACTIVE)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -58,8 +58,32 @@ model Message_List {
   @@map("message_lists")
 }
 
+model Hall_Room_Post {
+  id          String   @id @default(uuid())
+  title       String?
+  post        String?
+  image       String?
+  category    String
+  subcategory String
+  division    String
+  distrcit    String
+  thana       String
+  ward        String?
+  area        String?
+  road        String?
+  client_id   String?
+  like        String[]
+  view        String[]
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("hall_room_posts")
+}
+
 enum Status {
   ACTIVE
+  EDIT
   BLOCKED
 }
 
@@ -69,3 +93,4 @@ enum Role {
 }
 
 // npx prisma migrate dev --name init
+// prisma studio
