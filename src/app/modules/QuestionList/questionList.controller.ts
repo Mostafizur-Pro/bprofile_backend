@@ -84,21 +84,45 @@ import sendResponse from "../../../shared/sendResponse";
 //   return question;
 // };
 
+const getQuestionListById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await QuestionListService.getQuestionListById(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Question fetched successfully",
+    data: result,
+  });
+});
+
 const createQuestionList = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   const question = await QuestionListService.createQuestionList(payload);
   if (!question) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'question not created');
+    throw new ApiError(httpStatus.BAD_REQUEST, "question not created");
   }
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: 'question created successfully',
+    message: "Question created successfully",
     data: question,
   });
 });
 
+const deleteQuestionList = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await QuestionListService.deleteQuestionList(id);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Question list not found",
+    data: result,
+  });
+});
 
 export const QuestionListController = {
   createQuestionList,
+  getQuestionListById,
+  deleteQuestionList,
 };

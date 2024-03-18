@@ -59,19 +59,14 @@ const prisma = new PrismaClient();
 
 // export default QuestionListService;
 
-// const createQuestionList = catchAsync(async (req: Request, res: Response) => {
-//   const payload = req.body;
-//   const question = await QuestionListController.createQuestionList(payload);
-//   if (!question) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, "Question not created");
-//   }
-//   sendResponse(res, {
-//     statusCode: httpStatus.CREATED,
-//     success: true,
-//     message: "Question created successfully",
-//     data: question,
-//   });
-// });
+const getQuestionListById = async (
+  id: string
+): Promise<Question_List | null> => {
+  const result = await prisma.question_List.findUnique({
+    where: { id },
+  });
+  return result;
+};
 
 const createQuestionList = async (
   payload: Question_List
@@ -82,6 +77,15 @@ const createQuestionList = async (
   return question;
 };
 
+const deleteQuestionList = async (
+  id: string
+): Promise<Question_List | null> => {
+  const result = await prisma.question_List.delete({ where: { id } });
+  return result;
+};
+
 export const QuestionListService = {
   createQuestionList,
+  getQuestionListById,
+  deleteQuestionList,
 };

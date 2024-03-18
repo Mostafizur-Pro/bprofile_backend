@@ -4,9 +4,9 @@ import { QuestionListController } from "./questionList.controller";
 const router = express.Router();
 
 // router.get('/', QuestionListController.getAllQuestionLists);
-// router.get('/:id', questionListController.getQuestionListById);
+router.get("/:id", QuestionListController.getQuestionListById);
 router.post("/", QuestionListController.createQuestionList);
 // router.put('/:id', questionListController.updateQuestionList);
-// router.delete('/:id', questionListController.deleteQuestionList);
+router.delete("/:id", QuestionListController.deleteQuestionList);
 
 export const questionRoutes = router;
