@@ -44,6 +44,20 @@ model Question_List {
   @@map("question_lists")
 }
 
+model Message_List {
+  id              String   @id @default(uuid())
+  subject         String
+  message         String
+  image           String
+  message_show    String
+  message_show_id String
+  status          Status   @default(ACTIVE)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("message_lists")
+}
+
 enum Status {
   ACTIVE
   BLOCKED
@@ -53,3 +67,5 @@ enum Role {
   ADMIN
   SUPPER_ADMIN
 }
+
+// npx prisma migrate dev --name init
