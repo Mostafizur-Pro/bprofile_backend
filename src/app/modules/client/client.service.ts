@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, Client } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
@@ -6,21 +6,21 @@ import { paginationHelpers } from "../../../helpers/paginationHelper";
 
 const prisma = new PrismaClient();
 
-export type IUserFilters = {
+export type IClientFilters = {
   searchTerm?: string;
 };
 
-const getAllUsers = async (
-  filters: IUserFilters,
+const getAllClients = async (
+  filters: IClientFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<User[]>> => {
+): Promise<IGenericResponse<Client[]>> => {
   const { searchTerm } = filters;
 
   const { page, limit } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   // Construct Prisma query
-  const query: Prisma.UserFindManyArgs = {
+  const query: Prisma.ClientFindManyArgs = {
     where: {
       AND: [
         searchTerm
@@ -47,10 +47,10 @@ const getAllUsers = async (
   };
 
   // Perform the actual querying based on conditions
-  const messages = await prisma.user.findMany(query);
+  const messages = await prisma.client.findMany(query);
 
   // Count total records for pagination
-  const total = await prisma.user.count({ where: query.where });
+  const total = await prisma.client.count({ where: query.where });
 
   return {
     data: messages,
@@ -62,53 +62,60 @@ const getAllUsers = async (
   };
 };
 
-const getUserById = async (id: string): Promise<User | null> => {
-  const result = await prisma.user.findUnique({
+const getClientById = async (id: string): Promise<Client | null> => {
+  const result = await prisma.client.findUnique({
     where: { id },
   });
   return result;
 };
 
-const createUser = async (data: User): Promise<User | any> => {
+const createClient = async (data: Client): Promise<Client | any> => {
   const hashedPassword: string = await bcrypt.hash(data.password, 6);
-  const userData = {
+  const clientData = {
     name: data.name,
+    organization_name: data.organization_name,
     profile_id: data.profile_id,
+    birthday: data.birthday,
+    gender: data.gender,
     number: data.number,
     image: data.image,
-    email: data.email,
+    category: data.category,
+    subcategory: data.subcategory,
+    division: data.category,
+    district: data.category,
+    thana: data.category,
     password: hashedPassword,
     status: data.status,
   };
 
   const result = await prisma.$transaction(async (transactionClient) => {
-    return transactionClient.user.create({
-      data: userData,
+    return transactionClient.client.create({
+      data: clientData,
     });
   });
   return data;
 };
 
-const updateUser = async (
+const updateClient = async (
   id: string,
-  data: Partial<User>
-): Promise<User | null> => {
-  const result = await prisma.user.update({
+  data: Partial<Client>
+): Promise<Client | null> => {
+  const result = await prisma.client.update({
     where: { id },
     data,
   });
   return result;
 };
 
-const deleteUser = async (id: string): Promise<User | null> => {
-  const result = await prisma.user.delete({ where: { id } });
+const deleteClient = async (id: string): Promise<Client | null> => {
+  const result = await prisma.client.delete({ where: { id } });
   return result;
 };
 
-export const userService = {
-  createUser,
-  getUserById,
-  deleteUser,
-  updateUser,
-  getAllUsers,
+export const clientService = {
+  createClient,
+  getClientById,
+  deleteClient,
+  updateClient,
+  getAllClients,
 };

@@ -5,6 +5,7 @@ import { userRoutes } from "../modules/User/user.routes";
 import { hallRoomPostRoutes } from "../modules/hallRoomPost/hallRoom.route";
 import { paidImageRoutes } from "../modules/paidImage/paidImage.route";
 import { paidVideoRoutes } from "../modules/paidVideo/paidVideo.route";
+import { clientRoutes } from "../modules/client/client.routes";
 
 const router = express.Router();
 
@@ -20,6 +21,10 @@ const moduleRoutes = [
   {
     path: "/user",
     route: userRoutes,
+  },
+  {
+    path: "/client",
+    route: clientRoutes,
   },
   {
     path: "/hall_room_post",

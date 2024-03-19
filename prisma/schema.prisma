@@ -14,13 +14,94 @@ datasource db {
 }
 
 model Admin {
+  id         String    @id @default(uuid())
+  name       String
+  profile_id String
+  number     String    @unique
+  image      String
+  role       AdminRole @default(EDITOR)
+  email      String    @unique
+  password   String
+  status     Status    @default(ACTIVE)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("admins")
+}
+
+model Client {
+  id                String     @id @default(uuid())
+  name              String
+  organization_name String
+  profile_id        String
+  birthday          String
+  gender            String
+  number            String     @unique
+  image             String
+  category          String
+  subcategory       String
+  division          String
+  district          String
+  thana             String
+  ward              String?
+  area              String?
+  road              String?
+  data              String[]
+  interest          String[]
+  connect           String[]
+  role              ClientRole @default(NORMAL)
+  email             String?    @unique
+  password          String
+  status            Status     @default(ACTIVE)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@map("cliants")
+}
+
+enum ClientRole {
+  NORMAL
+  BASIC
+  STANDARD
+  ADVANCED
+  PLUS
+  PRO
+}
+
+model Employee {
   id         String   @id @default(uuid())
   name       String
   profile_id String
-  number     String
+  birthday   String
+  gender     String
+  number     String   @unique
   image      String
-  role       Role     @default(ADMIN)
-  email      String   @unique
+  division   String
+  district   String
+  thana      String
+  ward       String?
+  area       String?
+  road       String?
+  data       String[]
+  interest   String[]
+  connect    String[]
+  role       String   @default("Seles and Merketing")
+  email      String?  @unique
+  password   String
+  status     Status   @default(ACTIVE)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("employees")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  profile_id String
+  number     String   @unique
+  image      String
+  email      String?  @unique
   password   String
   status     Status   @default(ACTIVE)
   createdAt  DateTime @default(now())
@@ -135,9 +216,12 @@ enum Status {
   BLOCKED
 }
 
-enum Role {
+enum AdminRole {
   ADMIN
+  SUB_ADMIN
   SUPPER_ADMIN
+  ACCOUNT
+  EDITOR
 }
 
 // npx prisma migrate dev --name init
