@@ -1,25 +1,25 @@
-import { PrismaClient, Hall_Room_Post, Prisma } from "@prisma/client";
+import { PrismaClient, Paid_Video, Prisma } from "@prisma/client";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
 
 const prisma = new PrismaClient();
 
-export type IHallRoomPostFilters = {
+export type IPaidVideoFilters = {
   searchTerm?: string;
 };
 
-const getAllHallRoomPost = async (
-  filters: IHallRoomPostFilters,
+const getAllPaidVideo = async (
+  filters: IPaidVideoFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<Hall_Room_Post[]>> => {
+): Promise<IGenericResponse<Paid_Video[]>> => {
   const { searchTerm } = filters;
 
   const { page, limit } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   // Construct Prisma query
-  const query: Prisma.Hall_Room_PostFindManyArgs = {
+  const query: Prisma.Paid_VideoFindManyArgs = {
     where: {
       AND: [
         searchTerm
@@ -47,10 +47,10 @@ const getAllHallRoomPost = async (
   };
 
   // Perform the actual querying based on conditions
-  const messages = await prisma.hall_Room_Post.findMany(query);
+  const messages = await prisma.paid_Video.findMany(query);
 
   // Count total records for pagination
-  const total = await prisma.hall_Room_Post.count({ where: query.where });
+  const total = await prisma.paid_Video.count({ where: query.where });
 
   return {
     data: messages,
@@ -62,46 +62,40 @@ const getAllHallRoomPost = async (
   };
 };
 
-const getHallRoomPostById = async (
-  id: string
-): Promise<Hall_Room_Post | null> => {
-  const result = await prisma.hall_Room_Post.findUnique({
+const getPaidVideoById = async (id: string): Promise<Paid_Video | null> => {
+  const result = await prisma.paid_Video.findUnique({
     where: { id },
   });
   return result;
 };
 
-const createHallRoomPost = async (
-  payload: Hall_Room_Post
-): Promise<Hall_Room_Post> => {
-  const hallRoomPost = await prisma.hall_Room_Post.create({
+const createPaidVideo = async (payload: Paid_Video): Promise<Paid_Video> => {
+  const hallRoomPost = await prisma.paid_Video.create({
     data: payload,
   });
   return hallRoomPost; // Corrected variable name here
 };
 
-const updateHallRoomPost = async (
+const updatePaidVideo = async (
   id: string,
-  data: Partial<Hall_Room_Post>
-): Promise<Hall_Room_Post | null> => {
-  const result = await prisma.hall_Room_Post.update({
+  data: Partial<Paid_Video>
+): Promise<Paid_Video | null> => {
+  const result = await prisma.paid_Video.update({
     where: { id },
     data,
   });
   return result;
 };
 
-const deleteHallRoomPost = async (
-  id: string
-): Promise<Hall_Room_Post | null> => {
-  const result = await prisma.hall_Room_Post.delete({ where: { id } });
+const deletePaidVideo = async (id: string): Promise<Paid_Video | null> => {
+  const result = await prisma.paid_Video.delete({ where: { id } });
   return result;
 };
 
-export const HallRoomPostService = {
-  createHallRoomPost,
-  getAllHallRoomPost,
-  getHallRoomPostById,
-  updateHallRoomPost,
-  deleteHallRoomPost,
+export const PaidVideoService = {
+  createPaidVideo,
+  getAllPaidVideo,
+  getPaidVideoById,
+  updatePaidVideo,
+  deletePaidVideo,
 };

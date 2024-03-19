@@ -81,6 +81,54 @@ model Hall_Room_Post {
   @@map("hall_room_posts")
 }
 
+model Paid_Image {
+  id          String   @id @default(uuid())
+  title       String?
+  post        String?
+  image       String?
+  category    String
+  subcategory String
+  division    String
+  district    String
+  thana       String
+  ward        String?
+  area        String?
+  road        String?
+  client_id   String?
+  client_role String?
+  like        String[]
+  view        String[]
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("paid_image")
+}
+
+model Paid_Video {
+  id          String   @id @default(uuid())
+  title       String?
+  post        String?
+  video       String?
+  category    String
+  subcategory String
+  division    String
+  district    String
+  thana       String
+  ward        String?
+  area        String?
+  road        String?
+  client_id   String?
+  client_role String?
+  like        String[]
+  view        String[]
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("paid_video")
+}
+
 enum Status {
   ACTIVE
   EDIT

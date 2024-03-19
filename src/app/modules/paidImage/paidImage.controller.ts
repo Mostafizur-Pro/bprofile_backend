@@ -1,33 +1,33 @@
 import { Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
-import { HallRoomPostService } from "./hallRoom.service";
+import { PaidImageService } from "./paidImage.service";
 import httpStatus from "http-status";
 import sendResponse from "../../../shared/sendResponse";
 import ApiError from "../../../errors/ApiError";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
 
-export const hallRoomPostFilterableFields = ["searchTerm", "title", "syncId"];
+export const paidImageFilterableFields = ["searchTerm", "title", "syncId"];
 
-const getAllHallRoomPost = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, hallRoomPostFilterableFields);
+const getAllPaidImage = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, paidImageFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await HallRoomPostService.getAllHallRoomPost(
+  const result = await PaidImageService.getAllPaidImage(
     filters,
     paginationOptions
   );
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Message fetched successfully",
+    message: "Paid Image fetched successfully",
     data: result.data,
     meta: result.meta,
   });
 });
 
-const getHallRoomPostById = catchAsync(async (req: Request, res: Response) => {
+const getPaidImageById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const result = await HallRoomPostService.getHallRoomPostById(id);
+  const result = await PaidImageService.getPaidImageById(id);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -36,10 +36,10 @@ const getHallRoomPostById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const createHallRoomPost = catchAsync(async (req: Request, res: Response) => {
+const createPaidImage = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   console.log("hall", payload);
-  const hallRoom = await HallRoomPostService.createHallRoomPost(payload);
+  const hallRoom = await PaidImageService.createPaidImage(payload);
   if (!hallRoom) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Message not created");
   }
@@ -51,10 +51,10 @@ const createHallRoomPost = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateHallRoomPost = catchAsync(async (req: Request, res: Response) => {
+const updatePaidImage = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const data = req.body;
-  const result = await HallRoomPostService.updateHallRoomPost(id, data);
+  const result = await PaidImageService.updatePaidImage(id, data);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -63,9 +63,9 @@ const updateHallRoomPost = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const deleteHallRoomPost = catchAsync(async (req: Request, res: Response) => {
+const deletePaidImage = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const result = await HallRoomPostService.deleteHallRoomPost(id);
+  const result = await PaidImageService.deletePaidImage(id);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -74,11 +74,10 @@ const deleteHallRoomPost = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
-export const HallRoomPostController = {
-  createHallRoomPost,
-  getAllHallRoomPost,
-  getHallRoomPostById,
-  updateHallRoomPost,
-  deleteHallRoomPost,
+export const PaidImageController = {
+  createPaidImage,
+  getAllPaidImage,
+  getPaidImageById,
+  updatePaidImage,
+  deletePaidImage,
 };

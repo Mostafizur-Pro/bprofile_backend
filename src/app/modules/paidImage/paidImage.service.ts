@@ -1,25 +1,25 @@
-import { PrismaClient, Hall_Room_Post, Prisma } from "@prisma/client";
+import { PrismaClient, Paid_Image, Prisma } from "@prisma/client";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
 
 const prisma = new PrismaClient();
 
-export type IHallRoomPostFilters = {
+export type IPaidImageFilters = {
   searchTerm?: string;
 };
 
-const getAllHallRoomPost = async (
-  filters: IHallRoomPostFilters,
+const getAllPaidImage = async (
+  filters: IPaidImageFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<Hall_Room_Post[]>> => {
+): Promise<IGenericResponse<Paid_Image[]>> => {
   const { searchTerm } = filters;
 
   const { page, limit } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   // Construct Prisma query
-  const query: Prisma.Hall_Room_PostFindManyArgs = {
+  const query: Prisma.Paid_ImageFindManyArgs = {
     where: {
       AND: [
         searchTerm
@@ -47,10 +47,10 @@ const getAllHallRoomPost = async (
   };
 
   // Perform the actual querying based on conditions
-  const messages = await prisma.hall_Room_Post.findMany(query);
+  const messages = await prisma.paid_Image.findMany(query);
 
   // Count total records for pagination
-  const total = await prisma.hall_Room_Post.count({ where: query.where });
+  const total = await prisma.paid_Image.count({ where: query.where });
 
   return {
     data: messages,
@@ -62,46 +62,40 @@ const getAllHallRoomPost = async (
   };
 };
 
-const getHallRoomPostById = async (
-  id: string
-): Promise<Hall_Room_Post | null> => {
-  const result = await prisma.hall_Room_Post.findUnique({
+const getPaidImageById = async (id: string): Promise<Paid_Image | null> => {
+  const result = await prisma.paid_Image.findUnique({
     where: { id },
   });
   return result;
 };
 
-const createHallRoomPost = async (
-  payload: Hall_Room_Post
-): Promise<Hall_Room_Post> => {
-  const hallRoomPost = await prisma.hall_Room_Post.create({
+const createPaidImage = async (payload: Paid_Image): Promise<Paid_Image> => {
+  const hallRoomPost = await prisma.paid_Image.create({
     data: payload,
   });
   return hallRoomPost; // Corrected variable name here
 };
 
-const updateHallRoomPost = async (
+const updatePaidImage = async (
   id: string,
-  data: Partial<Hall_Room_Post>
-): Promise<Hall_Room_Post | null> => {
-  const result = await prisma.hall_Room_Post.update({
+  data: Partial<Paid_Image>
+): Promise<Paid_Image | null> => {
+  const result = await prisma.paid_Image.update({
     where: { id },
     data,
   });
   return result;
 };
 
-const deleteHallRoomPost = async (
-  id: string
-): Promise<Hall_Room_Post | null> => {
-  const result = await prisma.hall_Room_Post.delete({ where: { id } });
+const deletePaidImage = async (id: string): Promise<Paid_Image | null> => {
+  const result = await prisma.paid_Image.delete({ where: { id } });
   return result;
 };
 
-export const HallRoomPostService = {
-  createHallRoomPost,
-  getAllHallRoomPost,
-  getHallRoomPostById,
-  updateHallRoomPost,
-  deleteHallRoomPost,
+export const PaidImageService = {
+  createPaidImage,
+  getAllPaidImage,
+  getPaidImageById,
+  updatePaidImage,
+  deletePaidImage,
 };
