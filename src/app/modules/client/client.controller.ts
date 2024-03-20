@@ -23,6 +23,7 @@ const getAllClients = catchAsync(async (req: Request, res: Response) => {
 
 const getClientById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
+
   const result = await clientService.getClientById(id);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

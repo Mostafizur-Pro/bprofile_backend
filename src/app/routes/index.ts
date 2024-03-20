@@ -7,6 +7,7 @@ import { paidImageRoutes } from "../modules/paidImage/paidImage.route";
 import { paidVideoRoutes } from "../modules/paidVideo/paidVideo.route";
 import { clientRoutes } from "../modules/client/client.routes";
 import { employeeRoutes } from "../modules/employee/employee.routes";
+import { adminRoutes } from "../modules/admin/admin.routes";
 
 const router = express.Router();
 
@@ -18,6 +19,10 @@ const moduleRoutes = [
   {
     path: "/question",
     route: questionRoutes,
+  },
+  {
+    path: "/admin",
+    route: adminRoutes,
   },
   {
     path: "/user",

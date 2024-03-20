@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Client } from "@prisma/client";
+import { Prisma, PrismaClient, Admin } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
@@ -6,21 +6,21 @@ import { paginationHelpers } from "../../../helpers/paginationHelper";
 
 const prisma = new PrismaClient();
 
-export type IClientFilters = {
+export type IAdminFilters = {
   searchTerm?: string;
 };
 
-const getAllClients = async (
-  filters: IClientFilters,
+const getAllAdmins = async (
+  filters: IAdminFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<Client[]>> => {
+): Promise<IGenericResponse<Admin[]>> => {
   const { searchTerm } = filters;
 
   const { page, limit } =
     paginationHelpers.calculatePagination(paginationOptions);
 
   // Construct Prisma query
-  const query: Prisma.ClientFindManyArgs = {
+  const query: Prisma.AdminFindManyArgs = {
     where: {
       AND: [
         searchTerm
@@ -47,10 +47,10 @@ const getAllClients = async (
   };
 
   // Perform the actual querying based on conditions
-  const messages = await prisma.client.findMany(query);
+  const messages = await prisma.admin.findMany(query);
 
   // Count total records for pagination
-  const total = await prisma.client.count({ where: query.where });
+  const total = await prisma.admin.count({ where: query.where });
 
   return {
     data: messages,
@@ -62,62 +62,53 @@ const getAllClients = async (
   };
 };
 
-const getClientById = async (id: string): Promise<Client | null> => {
-  const result = await prisma.client.findFirst({
-    where: {
-      OR: [{ id: id }, { profile_id: id }],
-    },
+const getAdminById = async (id: string): Promise<Admin | null> => {
+  const result = await prisma.admin.findUnique({
+    where: { id },
   });
   return result;
 };
 
-const createClient = async (data: Client): Promise<Client | any> => {
+const createAdmin = async (data: Admin): Promise<Admin | any> => {
   const hashedPassword: string = await bcrypt.hash(data.password, 6);
-  const clientData = {
+  const AdminData = {
     name: data.name,
-    organization_name: data.organization_name,
     profile_id: data.profile_id,
-    birthday: data.birthday,
-    gender: data.gender,
     number: data.number,
     image: data.image,
-    category: data.category,
-    subcategory: data.subcategory,
-    division: data.division,
-    district: data.district,
-    thana: data.thana,
+    email: data.email,
     password: hashedPassword,
     status: data.status,
   };
 
-  const result = await prisma.$transaction(async (transactionClient) => {
-    return transactionClient.client.create({
-      data: clientData,
+  const result = await prisma.$transaction(async (transactionAdmin) => {
+    return transactionAdmin.admin.create({
+      data: AdminData,
     });
   });
   return data;
 };
 
-const updateClient = async (
+const updateAdmin = async (
   id: string,
-  data: Partial<Client>
-): Promise<Client | null> => {
-  const result = await prisma.client.update({
+  data: Partial<Admin>
+): Promise<Admin | null> => {
+  const result = await prisma.admin.update({
     where: { id },
     data,
   });
   return result;
 };
 
-const deleteClient = async (id: string): Promise<Client | null> => {
-  const result = await prisma.client.delete({ where: { id } });
+const deleteAdmin = async (id: string): Promise<Admin | null> => {
+  const result = await prisma.admin.delete({ where: { id } });
   return result;
 };
 
-export const clientService = {
-  createClient,
-  getClientById,
-  deleteClient,
-  updateClient,
-  getAllClients,
+export const adminService = {
+  createAdmin,
+  getAdminById,
+  deleteAdmin,
+  updateAdmin,
+  getAllAdmins,
 };
