@@ -35,6 +35,7 @@ const getAllHallRoomPost = async (
                 { ward: { contains: searchTerm, mode: "insensitive" } },
                 { area: { contains: searchTerm, mode: "insensitive" } },
                 { road: { contains: searchTerm, mode: "insensitive" } },
+                { client_id: { contains: searchTerm, mode: "insensitive" } },
               ],
             }
           : {},

@@ -9,10 +9,15 @@ import { clientRoutes } from "../modules/client/client.routes";
 import { employeeRoutes } from "../modules/employee/employee.routes";
 import { adminRoutes } from "../modules/admin/admin.routes";
 import { locationRoutes } from "../modules/location/location.route";
+import { authRoutes } from "../modules/auth/auth.route";
 
 const router = express.Router();
 
 const moduleRoutes = [
+  {
+    path: "/",
+    route: authRoutes,
+  },
   {
     path: "/locations",
     route: locationRoutes,

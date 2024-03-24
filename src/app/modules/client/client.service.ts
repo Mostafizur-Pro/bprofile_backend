@@ -63,11 +63,19 @@ const getAllClients = async (
 };
 
 const getClientById = async (id: string): Promise<Client | null> => {
+
   const result = await prisma.client.findFirst({
     where: {
-      OR: [{ id: id }, { profile_id: id }],
+      OR: [
+        { id: id },
+        { profile_id: id },
+        { email: id },
+        { number: id },
+        { password: id },
+      ],
     },
   });
+  console.log("id", id, result);
   return result;
 };
 
@@ -86,6 +94,7 @@ const createClient = async (data: Client): Promise<Client | any> => {
     division: data.division,
     district: data.district,
     thana: data.thana,
+    email: data.email,
     password: hashedPassword,
     status: data.status,
   };
