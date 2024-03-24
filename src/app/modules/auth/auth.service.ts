@@ -46,6 +46,7 @@ const login = async (data: { email: string; password: string }) => {
     accessToken,
     refreshToken,
     cookieOptions,
+    client
   };
 };
 
