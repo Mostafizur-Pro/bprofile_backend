@@ -48,6 +48,7 @@ const updateClient = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const data = req.body;
   const result = await clientService.updateClient(id, data);
+
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,

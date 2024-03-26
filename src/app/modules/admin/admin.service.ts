@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
-import { generateNextProfileId } from "../../../utils/generateStudentId";
+import { generateNextAdminProfileId } from "../../../utils/generateStudentId";
 
 const prisma = new PrismaClient();
 
@@ -72,13 +72,14 @@ const getAdminById = async (id: string): Promise<Admin | null> => {
 
 const createAdmin = async (data: Admin): Promise<Admin | any> => {
   const hashedPassword: string = await bcrypt.hash(data.password, 6);
-  const profileId = await generateNextProfileId();
-  const AdminData = {
+  const profileId = await generateNextAdminProfileId();
+  const adminData: Admin = {
     name: data.name,
     profile_id: profileId,
     number: data.number,
     image:
       "https://www.vhv.rs/dpng/d/15-155087_dummy-image-of-user-hd-png-download.png",
+    role: data.role,
     email: data.email,
     password: hashedPassword,
     status: "ACTIVE",
@@ -87,7 +88,7 @@ const createAdmin = async (data: Admin): Promise<Admin | any> => {
 
   const result = await prisma.$transaction(async (transactionAdmin) => {
     return transactionAdmin.admin.create({
-      data: AdminData,
+      data: adminData,
     });
   });
   return data;

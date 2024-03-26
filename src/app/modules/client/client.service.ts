@@ -3,6 +3,7 @@ import * as bcrypt from "bcrypt";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
+import { generateNextClientProfileId } from "../../../utils/generateStudentId";
 
 const prisma = new PrismaClient();
 
@@ -63,7 +64,6 @@ const getAllClients = async (
 };
 
 const getClientById = async (id: string): Promise<Client | null> => {
-
   const result = await prisma.client.findFirst({
     where: {
       OR: [
@@ -75,16 +75,19 @@ const getClientById = async (id: string): Promise<Client | null> => {
       ],
     },
   });
-  
+
   return result;
 };
 
 const createClient = async (data: Client): Promise<Client | any> => {
   const hashedPassword: string = await bcrypt.hash(data.password, 6);
+
+  const profileId = await generateNextClientProfileId();
+
   const clientData = {
     name: data.name,
     organization_name: data.organization_name,
-    profile_id: data.profile_id,
+    profile_id: profileId,
     birthday: data.birthday,
     gender: data.gender,
     number: data.number,
@@ -94,10 +97,17 @@ const createClient = async (data: Client): Promise<Client | any> => {
     division: data.division,
     district: data.district,
     thana: data.thana,
+    ward: data?.ward || "null",
+    area: data?.area || "null",
+    road: data?.road || "null",
+    image:
+      "https://www.vhv.rs/dpng/d/15-155087_dummy-image-of-user-hd-png-download.png",
     email: data.email,
     password: hashedPassword,
-    status: data.status,
+    status: "ACTIVE",
   };
+
+  console.log("client", clientData);
 
   const result = await prisma.$transaction(async (transactionClient) => {
     return transactionClient.client.create({

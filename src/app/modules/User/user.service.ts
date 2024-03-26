@@ -3,6 +3,7 @@ import * as bcrypt from "bcrypt";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
+import { generateNextUserProfileId } from "../../../utils/generateStudentId";
 
 const prisma = new PrismaClient();
 
@@ -70,15 +71,20 @@ const getUserById = async (id: string): Promise<User | null> => {
 };
 
 const createUser = async (data: User): Promise<User | any> => {
+  console.log("user", data);
   const hashedPassword: string = await bcrypt.hash(data.password, 6);
+
+  const profileId = await generateNextUserProfileId();
+
   const userData = {
     name: data.name,
-    profile_id: data.profile_id,
+    profile_id: profileId,
     number: data.number,
-    image: data.image,
+    image:
+      "https://www.vhv.rs/dpng/d/15-155087_dummy-image-of-user-hd-png-download.png",
     email: data.email,
     password: hashedPassword,
-    status: data.status,
+    status: "ACTIVE",
   };
 
   const result = await prisma.$transaction(async (transactionClient) => {
