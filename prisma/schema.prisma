@@ -46,6 +46,8 @@ model Client {
   ward              String?
   area              String?
   road              String?
+  emp_id            String?
+  emp_name          String?
   data              String[]
   interest          String[]
   connect           String[]

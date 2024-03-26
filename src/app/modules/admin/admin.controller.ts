@@ -34,6 +34,7 @@ const getAdminById = catchAsync(async (req: Request, res: Response) => {
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
+  
   const result = await adminService.createAdmin(payload);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

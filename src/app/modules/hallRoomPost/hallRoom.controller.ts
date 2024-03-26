@@ -38,7 +38,7 @@ const getHallRoomPostById = catchAsync(async (req: Request, res: Response) => {
 
 const createHallRoomPost = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log("hall", payload);
+  
   const hallRoom = await HallRoomPostService.createHallRoomPost(payload);
   if (!hallRoom) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Message not created");

@@ -75,7 +75,7 @@ const getClientById = async (id: string): Promise<Client | null> => {
       ],
     },
   });
-  console.log("id", id, result);
+  
   return result;
 };
 

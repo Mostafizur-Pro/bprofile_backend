@@ -56,7 +56,7 @@ const createMessage = catchAsync(async (req: Request, res: Response) => {
   // }
 
   const message = await MessageService.createMessage(payload);
-  // console.log("m", message);
+  
   if (!message) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Message not created");
   }

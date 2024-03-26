@@ -38,7 +38,7 @@ const getPaidVideoById = catchAsync(async (req: Request, res: Response) => {
 
 const createPaidVideo = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log("hall", payload);
+  
   const hallRoom = await PaidVideoService.createPaidVideo(payload);
   if (!hallRoom) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Message not created");

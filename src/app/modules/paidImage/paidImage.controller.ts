@@ -38,7 +38,7 @@ const getPaidImageById = catchAsync(async (req: Request, res: Response) => {
 
 const createPaidImage = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log("hall", payload);
+  
   const hallRoom = await PaidImageService.createPaidImage(payload);
   if (!hallRoom) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Message not created");
