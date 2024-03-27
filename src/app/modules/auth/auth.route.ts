@@ -8,6 +8,4 @@ router.post("/admin-login", authController.adminLogin);
 router.post("/change-password", authController.changePassword);
 // router.put("/:id", authController.updateClient);
 
-
-
 export const authRoutes = router;

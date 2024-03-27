@@ -71,6 +71,8 @@ const getAdminById = async (id: string): Promise<Admin | null> => {
 };
 
 const createAdmin = async (data: Admin): Promise<Admin | any> => {
+
+  console.log('admin', data)
   const hashedPassword: string = await bcrypt.hash(data.password, 6);
   const profileId = await generateNextAdminProfileId();
   const adminData: Admin = {
