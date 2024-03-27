@@ -75,6 +75,8 @@ const getHallRoomPostById = async (
 const createHallRoomPost = async (
   payload: Hall_Room_Post
 ): Promise<Hall_Room_Post> => {
+
+  // console.log('crateService', payload)
   const hallRoomPost = await prisma.hall_Room_Post.create({
     data: payload,
   });

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, request } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import { HallRoomPostService } from "./hallRoom.service";
 import httpStatus from "http-status";
@@ -6,6 +6,10 @@ import sendResponse from "../../../shared/sendResponse";
 import ApiError from "../../../errors/ApiError";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
+import multer from "multer";
+import path from "path";
+import { upload } from "../../middleware/multer";
+
 
 export const hallRoomPostFilterableFields = ["searchTerm", "title", "syncId"];
 
@@ -36,9 +40,15 @@ const getHallRoomPostById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+
 const createHallRoomPost = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log('hall', payload)
+  if (req.file) {
+    payload.image = req.file.path;
+  }
+
+  console.log("hall", payload);
   const hallRoom = await HallRoomPostService.createHallRoomPost(payload);
   if (!hallRoom) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Message not created");
@@ -73,7 +83,6 @@ const deleteHallRoomPost = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
 
 export const HallRoomPostController = {
   createHallRoomPost,

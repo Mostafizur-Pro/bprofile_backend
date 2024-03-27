@@ -3,6 +3,8 @@ import cors from "cors";
 import routes from "./app/routes";
 import httpStatus from "http-status";
 
+
+
 // const locations = require("./assets/location4.json");
 
 const app: Application = express();
@@ -12,9 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.get("/locations", (req, res) => {
-//   res.send(locations);
-// });
 
 app.get("/", (req: Request, res: Response) => {
   res.send({
@@ -23,6 +22,15 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1", routes);
+
+
+
+
+
+
+
+
+
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
